@@ -1,4 +1,5 @@
 package org.example;
+import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,30 @@ public class UserDao {
         }
 
         return kullanici_listesi;
+    }
+
+    public void add_user(User kullanici)
+    {
+        String sql_sorgu = "INSERT INTO Users(first_Name,Last_Name,tc_identity_number) VALUES (?,?,?)";
+
+        try (Connection eklemek_icin_baglanti = DriverManager.getConnection(DatabaseConfig.getDbUrl(),
+                DatabaseConfig.getDbUserName(),DatabaseConfig.getDbPassword());
+                PreparedStatement ne_olacak = eklemek_icin_baglanti.prepareStatement(sql_sorgu))
+        {
+
+            ne_olacak.setString(1,kullanici.getName());
+            ne_olacak.setString(2,kullanici.getLastname());
+            ne_olacak.setString(3,kullanici.getTc_no());
+
+            ne_olacak.executeUpdate();
+            System.out.println("Yeni kullanıcı sisteme eklendi....");
+
+
+        }catch (java.sql.SQLException e)
+        {
+            System.out.println("ekleme islemni icin baglanti kurulamadi...");
+        }
+
     }
 
 }
